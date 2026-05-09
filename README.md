@@ -6,7 +6,7 @@ Uses [bloodyAD](https://github.com/CravateRouge/bloodyAD) for LDAP retrieval and
 
 ## Why?
 
-Existing tools like [gMSADumper](https://github.com/micahvandeusen/gMSADumper) only output NT hashes. In hardened environments where **RC4 is disabled**, the NT hash is useless for Kerberos authentication — you need AES keys.
+Existing tools like [gMSADumper](https://github.com/micahvandeusen/gMSADumper) only output NT hashes. In hardened environments where **RC4 is disabled**, the NT hash is useless for Kerberos authentication, you need AES keys.
 
 This tool outputs all three: **NT hash**, **AES-256** and **AES-128** keys, ready to use with impacket's `-aesKey` parameter.
 
@@ -82,12 +82,12 @@ impacket-getTGT domain.local/'gMSA01$' -aesKey 09aef8c1af10f83547231a9b2b848d221
 
 ## How it works
 
-1. **Retrieval** — Uses bloodyAD to read the `msDS-ManagedPassword` attribute via LDAP with Kerberos SASL sealing (no LDAPS required)
-2. **NT hash** — Computes `MD4(raw_password_bytes)` from the blob
-3. **Salt** — Derives the Kerberos salt:
+1. **Retrieval** : Uses bloodyAD to read the `msDS-ManagedPassword` attribute via LDAP with Kerberos SASL sealing (no LDAPS required)
+2. **NT hash** : Computes `MD4(raw_password_bytes)` from the blob
+3. **Salt** : Derives the Kerberos salt:
    - Machine accounts (`$`): `REALMhost<fqdn>` (e.g. `VINTAGE.HTBhostgmsa01.vintage.htb`)
    - User accounts: `REALM<sAMAccountName>`
-4. **AES keys** — Converts password from UTF-16LE to UTF-8, then derives AES-256 and AES-128 keys using `string_to_key` with the computed salt
+4. **AES keys** : Converts password from UTF-16LE to UTF-8, then derives AES-256 and AES-128 keys using `string_to_key` with the computed salt
 
 > **Note on salt:** The salt is computed following AD's default convention. In rare cases where a custom salt is configured, you can verify the actual salt used by the KDC:
 > ```bash
@@ -107,7 +107,7 @@ Add `rdns = false` to `/etc/krb5.conf`:
 
 This prevents GSSAPI from doing reverse DNS lookups that can produce wrong SPNs.
 
-### RC4 disabled — AES key rejected
+### RC4 disabled : AES key rejected
 
 If `impacket-getTGT` returns `KDC_ERR_PREAUTH_FAILED` with an AES key, the salt might be wrong. Verify with `KRB5_TRACE` (see note above).
 
