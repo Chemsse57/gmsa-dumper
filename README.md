@@ -117,6 +117,3 @@ If `impacket-getTGT` returns `KDC_ERR_PREAUTH_FAILED` with an AES key, the salt 
 - [impacket](https://github.com/fortra/impacket) by Fortra
 - [gMSADumper](https://github.com/micahvandeusen/gMSADumper) by Micah Van Deusen (original inspiration)
 
-## License
-
-MIT
